@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.nav-container {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+
+  background: darkgreen;
+  color: red;
+  list-style: none;
+}
+
+.nav-container li {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+}
