@@ -1,48 +1,44 @@
-// import React, {useState} from 'react';
-import './components/TopMenu'
+import React, { useState } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-} from 'react-router-dom';
+import Overview from './pages/BlogOverzicht';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import BlogPost from './pages/Blogpost';
+import Navigation from './components/TopMenu';
 
-import Home from "./assets/pages/Home";
-import Login from "./assets/pages/Login";
-import BlogOverzicht from "./assets/pages/BlogOverzicht";
-import Blogpost from "./assets/pages/Blogpost";
-import TopMenu from "./components/TopMenu";
-
+function PrivateRoute({ children, isAuth, ...rest}) {
+    // omdat we nog steeds alle mogelijke properties zoals exact etc. op Route willen zetten, kunnen we met de ...rest operator zeggen:
+    // al die andere props die je verder nog ontvangt, zet die ook allemaal maar op <Route>
+    return (
+        <Route {...rest}>
+            {isAuth ? children : <Redirect to="/login" />}
+        </Route>
+    )
+}
 
 function App() {
-    // // We houden in de state bij of iemand is "ingelogd" (simpele versie)
-    // const [isAuthenticated, toggleIsAuthenticated] = useState(false);
+    // We houden in de state bij of iemand is "ingelogd" (simpele versie)
+    const [isAuthenticated, toggleIsAuthenticated ] = useState(false);
 
     return (
-        <Router>
-            <TopMenu/>
-
+        <div>
+            <Navigation isAuth={isAuthenticated} toggleAuth={toggleIsAuthenticated} />
             <Switch>
-
                 <Route exact path="/">
-                    <Home/>
+                    <Home />
                 </Route>
-
                 <Route path="/login">
-                    <Login/>
+                    <Login toggleAuth={toggleIsAuthenticated} />
                 </Route>
-
-                <Route path="/blogposts">
-                    <BlogOverzicht/>
-                </Route>
-
-                <Route path="/blogposts/:blogId">
-                    <Blogpost/>
-                </Route>
-
+                <PrivateRoute exact path="/blogposts" isAuth={isAuthenticated}>
+                    <Overview />
+                </PrivateRoute>
+                <PrivateRoute exact path="/blog/:blogId" isAuth={isAuthenticated}>
+                    <BlogPost />
+                </PrivateRoute>
             </Switch>
-
-        </Router>
+        </div>
     );
 }
 

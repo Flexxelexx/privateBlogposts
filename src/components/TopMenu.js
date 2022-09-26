@@ -1,33 +1,45 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useHistory} from 'react-router-dom';
 
-function TopMenu() {
+function Navigation({ isAuth, toggleAuth }) {
+    const history = useHistory();
+
+    function signOut() {
+        toggleAuth(false);
+        history.push('/')
+    }
+
     return (
         <nav>
-            <div className="nav-container">
-                <h1>WELKOM</h1>
-
-                <ul>
+            <ul>
+                <li>
+                    <NavLink to="/">
+                        Home
+                    </NavLink>
+                </li>
+                {/*Is de gebruiker ingelogd? Laat dan de blogposts en uitlog knop zien, en anders alleen de login knop */}
+                {isAuth === true
+                    ? <>
+                        <li>
+                            <NavLink to="/blogposts">
+                                Blogposts
+                            </NavLink>
+                        </li>
+                        <li>
+                            <button type="button" onClick={signOut}>
+                                Uitloggen
+                            </button>
+                        </li>
+                    </>
+                    :
                     <li>
-                        <NavLink to="/" exact activeClassName="active-link">Home</NavLink>
-                    </li>
-
-                    <li>
-                        <NavLink to="/login" activeClassName="active-link">Login</NavLink>
-                    </li>
-
-                    <li>
-                        <NavLink to="/blogposts" activeClassName="active-link">Blogoverzicht</NavLink>
-                    </li>
-
-                    <li>
-                        <NavLink to="/blogposts/:blogsID" activeClassName="active-link">Blogposts</NavLink>
-                    </li>
-                </ul>
-
-            </div>
+                        <NavLink to="/login">
+                            Login
+                        </NavLink>
+                    </li>}
+            </ul>
         </nav>
     );
 }
 
-export default TopMenu;
+export default Navigation;
